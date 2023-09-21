@@ -162,6 +162,8 @@
 </template>
 <script type="text/javascript">
   import axios from 'axios'
+  const BASE_URL = 'https://coronavirus-monitor.p.rapidapi.com/coronavirus'
+  
   export default {
     data() {
       return {
@@ -192,10 +194,7 @@
     methods: {
       getTotal: function (){
         this.onProcess = true;
-        axios.get('https://coronavirus-monitor.p.rapidapi.com/coronavirus/worldstat.php', {
-          params:{
-            // 'country': ''
-          },
+        axios.get(`${BASE_URL}/worldstat.php`, {
           headers: {
             'content-type': 'application/json; charset=utf-8',
             'x-rapidapi-host': 'coronavirus-monitor.p.rapidapi.com',
@@ -205,16 +204,12 @@
         .then(response => {
           this.dataTotal = response.data
           this.date = response.data.statistic_taken_at
-          // console.log(this.dataTotal);
           this.onProcess = false;
         })
       },
       getCountry: function (){
         this.onProcess = true;
-        axios.get('https://coronavirus-monitor.p.rapidapi.com/coronavirus/cases_by_country.php?filter[countries_stat]=Indonesia', {
-          params:{
-            // 'country': ''
-          },
+        axios.get(`${BASE_URL}/cases_by_country.php?filter[countries_stat]=Indonesia`, {
           headers: {
             "content-type": "application/json; charset=utf-8",
             "x-rapidapi-host": "coronavirus-monitor.p.rapidapi.com",
@@ -225,15 +220,12 @@
           }
         })
         .then(response => {
-          this.dataCovid = response.data
-
           const countrys = response.data.countries_stat
+          this.dataCovid = response.data
+          
           this.indCase = countrys.filter(country => country.country_name == 'Indonesia')
-
           this.indCaseTotal = this.indCase[0]
-
-          // console.log(this.dataCovid)
-          // console.log(this.indCaseTotal);
+          
           this.onProcess = false
         })
       },
